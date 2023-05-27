@@ -106,4 +106,3 @@ export const init = (): State => ({
     model: {},
 });
 
-export const state =  reactive<State>(init());
