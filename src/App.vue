@@ -97,12 +97,11 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { ModelDisplay, QuestionModel, stylevalidate } from './state';
 import { eval as expreval } from 'expression-eval';
 import { validate } from 'jsonschema';
+import { state, State, MV, ModelDisplay, QuestionModel, stylevalidate } from '.';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { State, MV } from './state';
-import { state } from '.';
 
 type D = {
   state: State;

@@ -1,10 +1,9 @@
 
 
-import { reactive } from 'vue';
 import App from './App.vue';
-import { State, init } from './state';
 
 export {
+    state,
     State,
     Message,
     AnswerFlow,
@@ -20,5 +19,4 @@ export {
     init,
 } from './state';
 
-export const state = reactive<State>(init());
 export default App;
