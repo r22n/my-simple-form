@@ -101,8 +101,27 @@ import { state, ModelDisplay, QuestionModel, stylevalidate } from './state';
 import { eval as expreval } from 'expression-eval';
 import { validate } from 'jsonschema';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { State } from './state';
+import { MV } from './state';
 
-export default defineComponent({
+type D = {
+  state: State;
+};
+type C = {
+  fid(): string;
+  qs(): [model: string, q: QuestionModel][];
+  goto(): string | undefined;
+  models(): { [model in string]: MV };
+  required(): boolean;
+};
+type M = {
+  pagination(next: number): void;
+  ok(): void;
+  done(): void;
+  cutpages(): void;
+}
+
+export default defineComponent<{}, {}, D, C, M>({
   data() {
     return { state };
   },
@@ -112,7 +131,7 @@ export default defineComponent({
       return f.pages[f.current];
     },
     qs() {
-      // @ts-expect-error workaround vue ts reports 'fid' not found
+
       const qs = state.forms[this.fid]?.questions;
       if (!qs) {
         console.warn(`no model found or state not found: qs=${!!qs} state=${!!state}`);
@@ -139,7 +158,7 @@ export default defineComponent({
         .sort((a, b) => Number(a[1].order) > Number(b[1].order) ? 1 : -1);
     },
     goto() {
-      // @ts-expect-error workaround vue ts reports 'fid' not found
+
       const f = state.forms[this.fid];
       if (!f) {
         console.warn(`cannot evaluate next fid: forms not found or state not found: state=${!!state} form=${!!f}`);
@@ -153,11 +172,10 @@ export default defineComponent({
       return f.goto?.eval;
     },
     models() {
-      // @ts-expect-error workaround vue ts reports 'fid' not found
+
       const m = state.model[this.fid];
       if (!m) {
         console.warn(`model not found: fid=${this.fid}`);
-        // @ts-expect-error workaround vue ts reports 'fid' not found
         return state.model[this.fid] = {};
       }
       return m;
