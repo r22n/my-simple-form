@@ -138,9 +138,12 @@ export default defineComponent({
     },
     goto() {
       const f = this.state.forms[this.fid];
+      this.cutpages();
       if (f.goto) {
         f.goto.eval = expreval(f.goto.expr, this.state.model);
       }
+
+
       return f.goto?.eval;
     },
     models() {
@@ -178,7 +181,7 @@ export default defineComponent({
       if (!goto) {
         console.error('ignore to ok: unexpected error: goto is empty or undefined');
         return;
-      }else if(!this.state.forms[goto]){
+      } else if (!this.state.forms[goto]) {
         console.error(`ignore to ok: unexpected error: goto was set but form is not found: fid=${goto}`);
         return;
       }
@@ -191,6 +194,23 @@ export default defineComponent({
     },
     done() {
       this.state.flow.touch.display = 'done';
+    },
+    cutpages() {
+      const f = this.state.flow;
+
+      let c = f.current;
+      for (; c < f.pages.length - 1; c++) {
+        const g = this.state.forms[f.pages[c]].goto;
+        if (!g) {
+          continue;
+        }
+        g.eval = expreval(g.expr, this.state.model);
+        if (g.eval && g.eval !== f.pages[c + 1]) {
+          break;
+        }
+      }
+
+      f.pages = f.pages.slice(0, c + 1);
     }
   }
 });
