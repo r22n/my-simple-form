@@ -48,10 +48,42 @@ state.forms = {
                 placeholder: '(placeholder 5)',
                 style: { expr: parse(`f1.q5 ? '{ "display" : "enabled" }' : '{ "display" : "required", "warn" : "question 5 should not to be empty !" }'`) },
             },
+        },
+        goto: { expr: parse('f1.q3 ? "f2" : "f3"') }
+    },
+
+    'f2': {
+        questions: {
+            'q1': {
+                caption: 'question 1',
+                summary: 'summary 1',
+                value: { type: 'text', init: 'a' },
+                order: 0,
+                placeholder: 'placeholder 1',
+                style: { expr: parse(`f2.q1.length ? '{ "display" : "enabled" }' : '{ "display" : "required", "warn" : "question 1 should not to be empty !" }'`) },
+            },
+        },
+        goto: { expr: parse('"f3"') }
+    },
+
+    'f3': {
+        questions: {
+            'q1': {
+                caption: 'question 1',
+                summary: 'summary 1',
+                value: { type: 'text', init: 'a' },
+                order: 0,
+                placeholder: 'placeholder 1',
+                style: { expr: parse(`f3.q1.length ? '{ "display" : "enabled" }' : '{ "display" : "required", "warn" : "question 1 should not to be empty !" }'`) },
+            },
         }
-    }
+    },
 };
-state.flow = { pages: ['f1'], current: 0 };
+state.flow = {
+    ...state.flow,
+    pages: ['f1'], current: 0,
+};
+
 state.model = {
     'f1': {
         'q1': '',
@@ -59,6 +91,12 @@ state.model = {
         'q3': false,
         'q4': 0,
         'q5': 'a',
+    },
+    'f2': {
+        'q1': '',
+    },
+    'f3': {
+        'q1': '',
     },
 };
 

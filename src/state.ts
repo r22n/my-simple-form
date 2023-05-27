@@ -19,7 +19,17 @@ export type Message = {
 export type AnswerFlow = {
     pages: string[];
     current: number;
+    touch: AnswerTouch;
 };
+
+export type AnswerTouch = {
+    display: 'input' | 'done';
+    done: {
+        title: string;
+        caption: string;
+        summary: string;
+    };
+}
 
 export type AnswerModel = {
     [fid in string]: {
@@ -92,7 +102,7 @@ export type EXF<T> = {
 };
 
 export const init = (): State => ({
-    flow: { pages: [], current: -1 },
+    flow: { pages: [], current: -1, touch: { display: 'input', done: { title: 'Complete', caption: 'Thank you for input', summary: 'Please answer other form if you mind.' } } },
     forms: {},
     message: { warnings: [], errors: [] },
     model: {},

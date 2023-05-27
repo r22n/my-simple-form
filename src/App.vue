@@ -1,64 +1,98 @@
 <template>
-  <form class="d-flex flex-column gap-3">
-    <div v-for="[model, q] in qs">
-      <div v-if="q.style?.eval?.display === 'hide'">
-      </div>
-      <div v-else-if="q.value.type === 'text' || q.value.type === 'email'">
-        <div class="form-label">
-          <label>{{ q.caption }}</label>
-          <div class="form-text">{{ q.summary }}</div>
+  <div class="w-100 h-100 d-flex flex-column gap-3 " v-if="state.flow.touch.display === 'input'">
+
+    <form class="d-flex flex-column flex-fill gap-3 overflow-auto">
+      <div v-for="[model, q] in qs">
+        <div v-if="q.style?.eval?.display === 'hide'">
         </div>
-        <input :type="q.value.type"
-          :class="`form-control ${q.style?.eval?.display === 'required' ? 'border border-danger' : ''}`"
-          :placeholder="q.placeholder" v-model="models[model]" :disabled="q.style?.eval?.display === 'disabled'">
-        <div :class="`form-text ${q.style?.eval?.display === 'required' ? 'text-danger' : ''}`">{{ q.style?.eval?.display
-          === 'required' || q.style?.eval?.display === 'disabled' ? q.style?.eval?.warn : '' }}</div>
-      </div>
-      <div v-else-if="q.value.type === 'number'">
-        <div class="form-label">
-          <label>{{ q.caption }}</label>
-          <div class="form-text">{{ q.summary }}</div>
+        <div v-else-if="q.value.type === 'text' || q.value.type === 'email'">
+          <div class="form-label">
+            <label>{{ q.caption }}</label>
+            <div class="form-text">{{ q.summary }}</div>
+          </div>
+          <input :type="q.value.type"
+            :class="`form-control ${q.style?.eval?.display === 'required' ? 'border border-danger' : ''}`"
+            :placeholder="q.placeholder" v-model="models[model]" :disabled="q.style?.eval?.display === 'disabled'">
+          <div :class="`form-text ${q.style?.eval?.display === 'required' ? 'text-danger' : ''}`">{{
+            q.style?.eval?.display
+            === 'required' || q.style?.eval?.display === 'disabled' ? q.style?.eval?.warn : '' }}</div>
         </div>
-        <input type="number"
-          :class="`form-control ${q.style?.eval?.display === 'required' ? 'border border-danger' : ''}`"
-          :placeholder="q.placeholder" v-model="models[model]" :disabled="q.style?.eval?.display === 'disabled'">
-        <div :class="`form-text ${q.style?.eval?.display === 'required' ? 'text-danger' : ''}`">{{ q.style?.eval?.display
-          === 'required' || q.style?.eval?.display ===
-          'disabled' ? q.style?.eval?.warn : '' }}</div>
-      </div>
-      <div v-else-if="q.value.type === 'check'">
-        <div class="form-label">
-          <label>{{ q.caption }}</label>
-          <div class="form-text">{{ q.summary }}</div>
+        <div v-else-if="q.value.type === 'number'">
+          <div class="form-label">
+            <label>{{ q.caption }}</label>
+            <div class="form-text">{{ q.summary }}</div>
+          </div>
+          <input type="number"
+            :class="`form-control ${q.style?.eval?.display === 'required' ? 'border border-danger' : ''}`"
+            :placeholder="q.placeholder" v-model="models[model]" :disabled="q.style?.eval?.display === 'disabled'">
+          <div :class="`form-text ${q.style?.eval?.display === 'required' ? 'text-danger' : ''}`">{{
+            q.style?.eval?.display
+            === 'required' || q.style?.eval?.display ===
+            'disabled' ? q.style?.eval?.warn : '' }}</div>
         </div>
-        <div class="form-check">
-          <input :class="`form-check-input ${q.style?.eval?.display === 'required' ? 'border border-danger' : ''}`"
-            type="checkbox" v-model="models[model]" :disabled="q.style?.eval?.display === 'disabled'">
-          <label class="form-check-label">
-            {{ q.placeholder }}
-          </label>
+        <div v-else-if="q.value.type === 'check'">
+          <div class="form-label">
+            <label>{{ q.caption }}</label>
+            <div class="form-text">{{ q.summary }}</div>
+          </div>
+          <div class="form-check">
+            <input :class="`form-check-input ${q.style?.eval?.display === 'required' ? 'border border-danger' : ''}`"
+              type="checkbox" v-model="models[model]" :disabled="q.style?.eval?.display === 'disabled'">
+            <label class="form-check-label">
+              {{ q.placeholder }}
+            </label>
+          </div>
+          <div :class="`form-text ${q.style?.eval?.display === 'required' ? 'text-danger' : ''}`">{{
+            q.style?.eval?.display
+            === 'required' || q.style?.eval?.display ===
+            'disabled' ? q.style?.eval?.warn : '' }}</div>
         </div>
-        <div :class="`form-text ${q.style?.eval?.display === 'required' ? 'text-danger' : ''}`">{{ q.style?.eval?.display
-          === 'required' || q.style?.eval?.display ===
-          'disabled' ? q.style?.eval?.warn : '' }}</div>
-      </div>
-      <div v-else-if="q.value.type === 'select'">
-        <div class="form-label">
-          <label>{{ q.caption }}</label>
-          <div class="form-text">{{ q.summary }}</div>
+        <div v-else-if="q.value.type === 'select'">
+          <div class="form-label">
+            <label>{{ q.caption }}</label>
+            <div class="form-text">{{ q.summary }}</div>
+          </div>
+          <select :class="`form-select ${q.style?.eval?.display === 'required' ? 'border border-danger' : ''}`"
+            v-model="models[model]" :disabled="q.style?.eval?.display === 'disabled'">
+            <option value="" class="text-secondary">{{ q.placeholder }}</option>
+            <option v-for="v in q.value.values">{{ v }}</option>
+          </select>
+          <div :class="`form-text ${q.style?.eval?.display === 'required' ? 'text-danger' : ''}`">{{
+            q.style?.eval?.display
+            === 'required' || q.style?.eval?.display ===
+            'disabled' ? q.style?.eval?.warn : '' }}</div>
         </div>
-        <select :class="`form-select ${q.style?.eval?.display === 'required' ? 'border border-danger' : ''}`"
-          v-model="models[model]" :disabled="q.style?.eval?.display === 'disabled'">
-          <option value="" class="text-secondary">{{ q.placeholder }}</option>
-          <option v-for="v in q.value.values">{{ v }}</option>
-        </select>
-        <div :class="`form-text ${q.style?.eval?.display === 'required' ? 'text-danger' : ''}`">{{ q.style?.eval?.display
-          === 'required' || q.style?.eval?.display ===
-          'disabled' ? q.style?.eval?.warn : '' }}</div>
       </div>
+    </form>
+
+    <div class="d-flex flex-row justify-content-between ">
+      <nav class="overflow-auto">
+        <ul class="pagination ">
+          <li v-for="(page, p) in state.flow.pages" :class="`page-item ${p === state.flow.current ? 'active' : ''}`"
+            @click="state.flow.current !== p && pagination(p)">
+            <a class="page-link">{{ page }}</a>
+          </li>
+        </ul>
+      </nav>
+      <span>
+        <button type="button" class="btn btn-primary" v-if="goto" @click="ok" :disabled="required">
+          OK
+        </button>
+        <button type="button" class="btn btn-primary" v-else @click="done" :disabled="required">
+          DONE
+        </button>
+      </span>
     </div>
-  </form>
-  {{ JSON.stringify(models) }}
+  </div>
+
+  <div class="card text-bg-success " v-else>
+    <div class="card-header">{{ state.flow.touch.done.title }}</div>
+    <div class="card-body">
+      <h5 class="card-title">{{ state.flow.touch.done.caption }}</h5>
+      <p class="card-text">{{ state.flow.touch.done.summary }}
+      </p>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -102,8 +136,18 @@ export default defineComponent({
         })
         .sort((a, b) => Number(a[1].order) > Number(b[1].order) ? 1 : -1);
     },
+    goto() {
+      const f = this.state.forms[this.fid];
+      if (f.goto) {
+        f.goto.eval = expreval(f.goto.expr, this.state.model);
+      }
+      return f.goto?.eval;
+    },
     models() {
       return this.state.model[this.fid];
+    },
+    required() {
+      return this.qs.some(([model, q]) => q.style?.eval?.display === 'required');
     }
   },
   created() {
@@ -122,6 +166,31 @@ export default defineComponent({
           models[model] = q.value.init !== void 0 ? q.value.init : 0;
           break;
       }
+    }
+  },
+  methods: {
+    pagination(next: number) {
+      this.state.flow.current = next;
+    },
+    ok() {
+      const f = this.state.flow;
+      const goto = this.goto;
+      if (!goto) {
+        console.error('ignore to ok: unexpected error: goto is empty or undefined');
+        return;
+      }else if(!this.state.forms[goto]){
+        console.error(`ignore to ok: unexpected error: goto was set but form is not found: fid=${goto}`);
+        return;
+      }
+
+      if (f.current === f.pages.length - 1) {
+        f.pages[++f.current] = goto;
+      } else {
+        f.current++;
+      }
+    },
+    done() {
+      this.state.flow.touch.display = 'done';
     }
   }
 });
