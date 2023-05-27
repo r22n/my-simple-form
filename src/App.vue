@@ -63,9 +63,9 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import states from './state';
+import states, { ModelDisplay, stylevalidate } from './state';
 import { eval as expreval } from 'expression-eval';
-
+import { validate } from 'jsonschema';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default defineComponent({
@@ -86,9 +86,16 @@ export default defineComponent({
         .filter(([model, q]) => {
           if (q.style) {
             try {
-              q.style.eval = JSON.parse(expreval(q.style.expr, this.state.model));
+              const s: ModelDisplay | undefined = JSON.parse(expreval(q.style.expr, this.state.model));
+              if (s) {
+                const v = validate(s, stylevalidate);
+                if (v.errors.length) {
+                  throw v.errors.map(x => `${x.message}: ${x.name} @ ${x.path}`)
+                }
+              }
+              q.style.eval = s;
             } catch (e) {
-              console.warn(`ignore to update style: style.expr malfunctions: fid.model=${this.fid}.${model}: ${e}`)
+              this.state.message.warnings.push(`ignore to update style: style.expr malfunctions: fid.model=${this.fid}.${model} style=${JSON.stringify(q.style?.eval)}: ${e}`);
             }
           }
           return 1;
@@ -102,8 +109,6 @@ export default defineComponent({
   created() {
     const models = this.models;
     for (const [model, q] of this.qs) {
-      const m = models[model];
-
       switch (q.value.type) {
         case 'text':
         case 'email':

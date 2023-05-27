@@ -68,7 +68,7 @@ export type ModelDisplay = {
     warn?: string;
 };
 
-export const display: Schema = {
+export const stylevalidate: Schema = {
     anyOf: [
         {
             type: 'object',
