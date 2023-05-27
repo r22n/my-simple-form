@@ -2,6 +2,8 @@ import { createApp } from 'vue'
 import App, { state } from '.'
 import { parse } from 'expression-eval';
 
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 state.forms = {
     'f1': {
         questions: {
@@ -96,8 +98,6 @@ state.model = {
         'q1': '',
     },
 };
-
-
 
 
 createApp(App).mount('#app')

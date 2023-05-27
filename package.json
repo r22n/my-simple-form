@@ -1,5 +1,5 @@
 {
-  "name": "simple-form",
+  "name": "my-simple-form",
   "version": "0.1.0",
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -32,6 +32,7 @@
     "not dead",
     "not ie 11"
   ],
+  "license": "MIT",
   "jest": {
     "preset": "@vue/cli-plugin-unit-jest/presets/typescript"
   }

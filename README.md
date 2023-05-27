@@ -1,4 +1,4 @@
-# simple-form
+# my-simple-form
 
 ## Project setup
 ```

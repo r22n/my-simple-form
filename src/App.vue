@@ -101,7 +101,6 @@ import { eval as expreval } from 'expression-eval';
 import { validate } from 'jsonschema';
 import { state, State, MV, ModelDisplay, QuestionModel, stylevalidate } from '.';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 type D = {
   state: State;
