@@ -1,23 +1,8 @@
-# my-simple-form
+import { createApp } from 'vue'
+import App, { state } from '.'
+import { parse } from 'expression-eval';
 
-show simple form from your model.
 
-## how to use
-
-```
-import MSF, { state } from 'my-simple-form';
-
-// MSF is vue sfc for 'components' fields and puts <MSF/> into 'template'
-...
-components: { MSF }
-
-...
-<MSF/>
-
-// get/set datas for your forms by reactive 'state' fields.
-// set forms and identify question by 'fid' and 'model'.
-// 'fid' represents field in forms key in case 'f1', 'f2'
-// 'model' represents field in questions in case 'q1', 'q2',
 state.forms = {
     'f1': {
         questions: {
@@ -27,11 +12,6 @@ state.forms = {
                 value: { type: 'text', init: 'a' },
                 order: 0,
                 placeholder: 'placeholder 1',
-// 'style' field let this question styles 'enabled|disabled|required|hide'.
-// 'enabled': enable user answer this question.
-// 'disabled': gray out this question and show 'warn' message.
-// 'required': red border this field and show 'warn message' and not to gray-out.
-// 'hide': hide this question as user cannot touch.
                 style: { expr: parse(`f1.q1.length ? '{ "display" : "enabled" }' : '{ "display" : "required", "warn" : "question 1 should not to be empty !" }'`) },
             },
             'q2': {
@@ -67,10 +47,6 @@ state.forms = {
                 style: { expr: parse(`f1.q5 ? '{ "display" : "enabled" }' : '{ "display" : "required", "warn" : "question 5 should not to be empty !" }'`) },
             },
         },
-// 'goto' field determs next form by 'fid'.
-// this form displays 
-//  - 'ok' button user go to its 'fid' if 'goto' is not empty
-//  - 'done' button completes user all forms as can reach if 'goto' is empty
         goto: { expr: parse('f1.q3 ? "f2" : "f3"') }
     },
 
@@ -102,14 +78,10 @@ state.forms = {
     },
 };
 state.flow = {
-// 'done' field puts your original message on complete all forms
     ...state.flow,
-// 'pages' and 'current' field is pagination of forms user can reach
     pages: ['f1'], current: 0,
 };
 
-// 'model' field is user edits state.
-// state.model['fid']['model'] are reactive values
 state.model = {
     'f1': {
         'q1': '',
@@ -125,4 +97,7 @@ state.model = {
         'q1': '',
     },
 };
-```
+
+
+createApp(App).mount('#app')
+
