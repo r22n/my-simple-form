@@ -1,5 +1,6 @@
 import { parse } from 'expression-eval';
 import { reactive } from 'vue';
+import { Schema } from 'jsonschema';
 
 export type States = { [instance in string]: State };
 
@@ -8,28 +9,28 @@ export type State = {
     model: AnswerModel;
     flow: AnswerFlow;
     message: Message;
-}
+};
 
 export type Message = {
     warnings: string[];
     errors: string[];
-}
+};
 
 export type AnswerFlow = {
     pages: string[];
     current: number;
-}
+};
 
 export type AnswerModel = {
     [fid in string]: {
         [model in string]: MV;
     }
-}
+};
 
 export type Form = {
     goto?: EXF<string>;
     questions: { [model in string]: QuestionModel };
-}
+};
 
 export type QuestionModel = {
     order?: number;
@@ -38,7 +39,7 @@ export type QuestionModel = {
     value: ModelValue;
     placeholder?: string;
     style?: EXF<ModelDisplay>;
-}
+};
 
 export type ModelValue = {
     type: 'text' | 'email';
@@ -65,6 +66,24 @@ export type ModelDisplay = {
 } | {
     display: 'required';
     warn?: string;
+};
+
+export const display: Schema = {
+    anyOf: [
+        {
+            type: 'object',
+            properties: {
+                display: { enum: ['disabled', 'required'], required: true },
+                warn: { type: 'string' },
+            }
+        },
+        {
+            type: 'object',
+            properties: {
+                display: { enum: ['enabled', 'hide'] }
+            }
+        }
+    ]
 };
 
 export type EXF<T> = {

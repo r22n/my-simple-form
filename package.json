@@ -9,6 +9,7 @@
   "dependencies": {
     "bootstrap": "^5.2.3",
     "expression-eval": "^5.0.0",
+    "jsonschema": "^1.4.1",
     "vue": "^3.2.13"
   },
   "main": "index.ts",

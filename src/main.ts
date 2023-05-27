@@ -11,7 +11,7 @@ state.forms = {
             'q1': {
                 caption: 'question 1',
                 summary: 'summary 1',
-                value: { type: 'text', init: 'hoge' },
+                value: { type: 'text', init: 'a' },
                 order: 0,
                 placeholder: 'placeholder 1',
                 style: { expr: parse(`f1.q1.length ? '{ "display" : "enabled" }' : '{ "display" : "required", "warn" : "question 1 should not to be empty !" }'`) },
@@ -22,7 +22,7 @@ state.forms = {
                 value: { type: 'email', init: 'fuga@piyo' },
                 order: 1,
                 placeholder: 'placeholder 2',
-                style: { expr: parse(`f1.q2.length ? '{ "display" : "enabled" }' : '{ "display" : "required", "warn" : "question 1 should not to be empty !" }'`) },
+                style: { expr: parse(`f1.q2.length ? '{ "display" : "enabled" }' : '{ "display" : "disabled", "warn" : "question 2 should not to be empty !" }'`) },
             },
             'q3': {
                 caption: 'question 3',
@@ -30,23 +30,23 @@ state.forms = {
                 value: { type: 'check', init: true },
                 order: 2,
                 placeholder: 'placeholder 3',
-                style: { expr: parse(`f1.q3 ? '{ "display" : "enabled" }' : '{ "display" : "required", "warn" : "question 1 should not to be empty !" }'`) },
+                style: { expr: parse(`f1.q3 ? '{ "display" : "enabled" }' : '{ "display" : "hide", "warn" : "question 3 should not to be empty !" }'`) },
             },
             'q4': {
                 caption: 'question 4',
                 summary: 'summary 4',
-                value: { type: 'number', init: 0 },
+                value: { type: 'number', init: 1 },
                 order: 3,
                 placeholder: 'placeholder 4',
-                style: { expr: parse(`f1.q4 ? '{ "display" : "enabled" }' : '{ "display" : "required", "warn" : "question 1 should not to be empty !" }'`) },
+                style: { expr: parse(`f1.q4 ? '{ "display" : "enabled" }' : '{ "display" : "required", "warn" : "question 4 should not to be empty !" }'`) },
             },
             'q5': {
                 caption: 'question 5',
                 summary: 'summary 5',
-                value: { type: 'select', init: 'a', values: ['a', 'b', 'c'] },
+                value: { type: 'select', init: '', values: ['a', 'b', 'c'] },
                 order: 4,
-                placeholder: 'placeholder 5',
-                style: { expr: parse(`f1.q5 ? '{ "display" : "enabled" }' : '{ "display" : "required", "warn" : "question 1 should not to be empty !" }'`) },
+                placeholder: '(placeholder 5)',
+                style: { expr: parse(`f1.q5 ? '{ "display" : "enabled" }' : '{ "display" : "required", "warn" : "question 5 should not to be empty !" }'`) },
             },
         }
     }
@@ -60,7 +60,6 @@ state.model = {
         'q4': 0,
         'q5': 'a',
     },
-
 };
 
 
