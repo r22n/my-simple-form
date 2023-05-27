@@ -1,4 +1,4 @@
-<template>
+<template >
   <div class="w-100 h-100 d-flex flex-column gap-3 " v-if="state.flow.touch.display === 'input'">
 
     <form class="d-flex flex-column flex-fill gap-3 overflow-auto">
@@ -85,7 +85,7 @@
     </div>
   </div>
 
-  <div class="card text-bg-success " v-else>
+  <div class="card text-bg-success " v-else-if="state.flow.touch.display === 'done'">
     <div class="card-header">{{ state.flow.touch.done.title }}</div>
     <div class="card-body">
       <h5 class="card-title">{{ state.flow.touch.done.caption }}</h5>
@@ -97,30 +97,32 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import states, { ModelDisplay, stylevalidate } from './state';
+import { state, ModelDisplay, QuestionModel, stylevalidate } from './state';
 import { eval as expreval } from 'expression-eval';
 import { validate } from 'jsonschema';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default defineComponent({
-  props: {
-    instance: String,
+  data() {
+    return { state };
   },
   computed: {
-    state() {
-      return states[this.instance ?? ''];
-    },
     fid() {
-      const f = this.state.flow;
+      const f = state.flow;
       return f.pages[f.current];
     },
     qs() {
-      const qs = this.state.forms[this.fid].questions;
+      // @ts-expect-error workaround vue ts reports 'fid' not found
+      const qs = state.forms[this.fid]?.questions;
+      if (!qs) {
+        console.warn(`no model found or state not found: qs=${!!qs} state=${!!state}`);
+        return [];
+      }
       return Object.entries(qs)
         .filter(([model, q]) => {
           if (q.style) {
             try {
-              const s: ModelDisplay | undefined = JSON.parse(expreval(q.style.expr, this.state.model));
+              const s: ModelDisplay | undefined = JSON.parse(expreval(q.style.expr, state.model));
               if (s) {
                 const v = validate(s, stylevalidate);
                 if (v.errors.length) {
@@ -129,7 +131,7 @@ export default defineComponent({
               }
               q.style.eval = s;
             } catch (e) {
-              this.state.message.warnings.push(`ignore to update style: style.expr malfunctions: fid.model=${this.fid}.${model} style=${JSON.stringify(q.style?.eval)}: ${e}`);
+              state.message.warnings.push(`ignore to update style: style.expr malfunctions: fid.model=${this.fid}.${model} style=${JSON.stringify(q.style.eval)}: ${e}`);
             }
           }
           return 1;
@@ -137,23 +139,35 @@ export default defineComponent({
         .sort((a, b) => Number(a[1].order) > Number(b[1].order) ? 1 : -1);
     },
     goto() {
-      const f = this.state.forms[this.fid];
-      this.cutpages();
-      if (f.goto) {
-        f.goto.eval = expreval(f.goto.expr, this.state.model);
+      // @ts-expect-error workaround vue ts reports 'fid' not found
+      const f = state.forms[this.fid];
+      if (!f) {
+        console.warn(`cannot evaluate next fid: forms not found or state not found: state=${!!state} form=${!!f}`);
+        return;
       }
 
-
+      this.cutpages();
+      if (f.goto) {
+        f.goto.eval = expreval(f.goto.expr, state.model);
+      }
       return f.goto?.eval;
     },
     models() {
-      return this.state.model[this.fid];
+      // @ts-expect-error workaround vue ts reports 'fid' not found
+      const m = state.model[this.fid];
+      if (!m) {
+        console.warn(`model not found: fid=${this.fid}`);
+        // @ts-expect-error workaround vue ts reports 'fid' not found
+        return state.model[this.fid] = {};
+      }
+      return m;
     },
     required() {
-      return this.qs.some(([model, q]) => q.style?.eval?.display === 'required');
+      const qs: [string, QuestionModel][] = this.qs;
+      return qs.some(([model, q]) => q.style?.eval?.display === 'required');
     }
   },
-  created() {
+  mounted() {
     const models = this.models;
     for (const [model, q] of this.qs) {
       switch (q.value.type) {
@@ -173,19 +187,20 @@ export default defineComponent({
   },
   methods: {
     pagination(next: number) {
-      this.state.flow.current = next;
+      state.flow.current = next;
     },
     ok() {
-      const f = this.state.flow;
+
       const goto = this.goto;
       if (!goto) {
         console.error('ignore to ok: unexpected error: goto is empty or undefined');
         return;
-      } else if (!this.state.forms[goto]) {
+      } else if (!state.forms[goto]) {
         console.error(`ignore to ok: unexpected error: goto was set but form is not found: fid=${goto}`);
         return;
       }
 
+      const f = state.flow;
       if (f.current === f.pages.length - 1) {
         f.pages[++f.current] = goto;
       } else {
@@ -193,18 +208,18 @@ export default defineComponent({
       }
     },
     done() {
-      this.state.flow.touch.display = 'done';
+      state.flow.touch.display = 'done';
     },
     cutpages() {
-      const f = this.state.flow;
+      const f = state.flow;
 
       let c = f.current;
       for (; c < f.pages.length - 1; c++) {
-        const g = this.state.forms[f.pages[c]].goto;
+        const g = state.forms[f.pages[c]].goto;
         if (!g) {
           continue;
         }
-        g.eval = expreval(g.expr, this.state.model);
+        g.eval = expreval(g.expr, state.model);
         if (g.eval && g.eval !== f.pages[c + 1]) {
           break;
         }

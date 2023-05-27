@@ -1,6 +1,6 @@
-import App from './App.vue';
-import state, {
-    States,
+
+export {
+    state,
     State,
     Message,
     AnswerFlow,
@@ -15,23 +15,7 @@ import state, {
     EXF,
     init,
 } from './state';
+import App from './App.vue';
 
-export {
-    state,
-    States,
-    State,
-    Message,
-    AnswerFlow,
-    AnswerModel,
-    Form,
-    QuestionModel,
-    ModelValue,
-    MT,
-    MV,
-    ModelDisplay,
-    stylevalidate,
-    EXF,
-    init,
-};
 
 export default App;

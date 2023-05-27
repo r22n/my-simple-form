@@ -1,10 +1,7 @@
 import { createApp } from 'vue'
-import App from './App.vue'
-import states, { init } from './state';
+import App, { state } from '.'
 import { parse } from 'expression-eval';
 
-const instance = 'sample-application';
-const state = init();
 state.forms = {
     'f1': {
         questions: {
@@ -101,8 +98,7 @@ state.model = {
 };
 
 
-states[instance] = state;
 
 
-createApp(App, { instance }).mount('#app')
+createApp(App).mount('#app')
 

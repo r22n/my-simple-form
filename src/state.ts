@@ -2,8 +2,6 @@ import { parse } from 'expression-eval';
 import { reactive } from 'vue';
 import { Schema } from 'jsonschema';
 
-export type States = { [instance in string]: State };
-
 export type State = {
     forms: { [fid in string]: Form };
     model: AnswerModel;
@@ -108,4 +106,4 @@ export const init = (): State => ({
     model: {},
 });
 
-export default reactive<States>({});
+export const state =  reactive<State>(init());
