@@ -99,7 +99,7 @@
 import { defineComponent } from 'vue';
 import { eval as expreval } from 'expression-eval';
 import { validate } from 'jsonschema';
-import { state, State, MV, ModelDisplay, QuestionModel, stylevalidate } from '.';
+import { state, State, MV, ModelDisplay, QuestionModel, stylevalidate, fmid } from '.';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -186,6 +186,18 @@ export default defineComponent<{}, {}, D, C, M>({
   },
   mounted() {
     const models = this.models;
+
+    Object.entries(state.forms).forEach(([fid, form]) => {
+      if (!fmid.test(fid)) {
+        state.message.warnings.push(`form behavior will be unspecified: fid rule exceeded: fid=${fid}`);
+      }
+      Object.keys(form.questions).forEach(model => {
+        if (!fmid.test(model)) {
+          state.message.warnings.push(`form behavior will be unspecified: model rule exceeded: model=${fid} fid=${fid}`);
+        }
+      });
+    });
+
     for (const [model, q] of this.qs) {
       switch (q.value.type) {
         case 'text':

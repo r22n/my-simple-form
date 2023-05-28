@@ -17,6 +17,8 @@ export {
     stylevalidate,
     EXF,
     init,
+    AnswerTouch,
+    fmid
 } from './state';
 
 export default App;
