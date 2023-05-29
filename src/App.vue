@@ -12,7 +12,8 @@
           </div>
           <input :type="q.value.type"
             :class="`form-control ${q.style?.eval?.display === 'required' ? 'border border-danger' : ''}`"
-            :placeholder="q.placeholder" v-model="models[model]" :disabled="q.style?.eval?.display === 'disabled'">
+            :placeholder="q.placeholder" v-model="models[model]" :disabled="q.style?.eval?.display === 'disabled'"
+            @change="$emit('change', fid, model)">
           <div :class="`form-text ${q.style?.eval?.display === 'required' ? 'text-danger' : ''}`">{{
             q.style?.eval?.display
             === 'required' || q.style?.eval?.display === 'disabled' ? q.style?.eval?.warn : '' }}</div>
@@ -24,7 +25,8 @@
           </div>
           <input type="number"
             :class="`form-control ${q.style?.eval?.display === 'required' ? 'border border-danger' : ''}`"
-            :placeholder="q.placeholder" v-model="models[model]" :disabled="q.style?.eval?.display === 'disabled'">
+            :placeholder="q.placeholder" v-model="models[model]" :disabled="q.style?.eval?.display === 'disabled'"
+            @change="$emit('change', fid, model)">
           <div :class="`form-text ${q.style?.eval?.display === 'required' ? 'text-danger' : ''}`">{{
             q.style?.eval?.display
             === 'required' || q.style?.eval?.display ===
@@ -37,7 +39,8 @@
           </div>
           <div class="form-check">
             <input :class="`form-check-input ${q.style?.eval?.display === 'required' ? 'border border-danger' : ''}`"
-              type="checkbox" v-model="models[model]" :disabled="q.style?.eval?.display === 'disabled'">
+              type="checkbox" v-model="models[model]" :disabled="q.style?.eval?.display === 'disabled'"
+              @change="$emit('change', fid, model)">
             <label class="form-check-label">
               {{ q.placeholder }}
             </label>
@@ -53,7 +56,8 @@
             <div class="form-text">{{ q.summary }}</div>
           </div>
           <select :class="`form-select ${q.style?.eval?.display === 'required' ? 'border border-danger' : ''}`"
-            v-model="models[model]" :disabled="q.style?.eval?.display === 'disabled'">
+            v-model="models[model]" :disabled="q.style?.eval?.display === 'disabled'"
+            @change="$emit('change', fid, model)">
             <option value="" class="text-secondary">{{ q.placeholder }}</option>
             <option v-for="v in q.value.values">{{ v }}</option>
           </select>
@@ -119,11 +123,34 @@ type M = {
   done(): void;
   cutpages(): void;
 };
+type E = {
+  /**
+   * input field of question cause change event.
+   * 
+   * @param fid current fid user faces
+   * @param model question dispatches change event
+   */
+  change(fid: string, model: string): void;
+  /**
+   * - form accepts ok cause ok event.
+   * - ok button ignores this event if anyof
+   *    - ok button was disabled
+   *    - next fid was not found
+   */
+  ok(): void;
+  /**
+   * - form accepts done cause done event.
+   * - call condition is same with 'ok' event.
+   * @see ok
+   */
+  done(): void;
+};
 
-export default defineComponent<{}, {}, D, C, M>({
+export default defineComponent<{}, E, D, C, M>({
   data() {
     return { state };
   },
+  emits: ['change', 'ok', 'done'],
   computed: {
     fid() {
       const f = state.flow;
@@ -219,7 +246,6 @@ export default defineComponent<{}, {}, D, C, M>({
       state.flow.current = next;
     },
     ok() {
-
       const goto = this.goto;
       if (!goto) {
         console.error('ignore to ok: unexpected error: goto is empty or undefined');
@@ -235,9 +261,11 @@ export default defineComponent<{}, {}, D, C, M>({
       } else {
         f.current++;
       }
+      this.$emit('ok', this.fid);
     },
     done() {
       state.flow.touch.display = 'done';
+      this.$emit('done', this.fid);
     },
     cutpages() {
       const f = state.flow;

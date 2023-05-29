@@ -4,6 +4,9 @@ show simple form from your model.
 
 ## how to use
 
+
+### declare template and data bindings
+
 ```
 import MSF, { state } from 'my-simple-form';
 
@@ -125,4 +128,14 @@ state.model = {
         'q1': '',
     },
 };
+```
+
+### events
+
+```
+type E = {
+  change(fid: string, model: string): void;
+  ok(): void;
+  done(): void;
+}
 ```
