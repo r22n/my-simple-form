@@ -253,6 +253,6 @@ export const init = (): State => ({
     model: {},
 });
 
-export const fmid = /^[^. ;()[]<>-+\*-=@#$%^&*!?{}"'~]+$/;
+export const fmid = /^[^\.\ \;\(\)\[\]\<\>\-\+\*\/\=\@\#\$\%\^\&\*\!\?\{\}\"\'\~]+$/;
 
 export const state = reactive<State>(init());
