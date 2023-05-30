@@ -133,9 +133,15 @@ state.model = {
 ### events
 
 ```
+// set event in template section
+<MSF @change="(fid,model)=>..." @ok="fid=>..." ...
+
+
+// declarations of events emitted from component
 type E = {
   change(fid: string, model: string): void;
-  ok(): void;
-  done(): void;
+  ok(fid:string): void;
+  done(fid:string): void;
+  pagination(fid:string): void;
 }
 ```

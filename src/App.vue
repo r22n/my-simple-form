@@ -125,7 +125,8 @@ type M = {
 };
 type E = {
   /**
-   * input field of question cause change event.
+   * - input field of question cause change event.
+   * - cause this event after model changed
    * 
    * @param fid current fid user faces
    * @param model question dispatches change event
@@ -136,21 +137,28 @@ type E = {
    * - ok button ignores this event if anyof
    *    - ok button was disabled
    *    - next fid was not found
+   * - paramter of fid will be after ok
    */
-  ok(): void;
+  ok(fid: string): void;
   /**
    * - form accepts done cause done event.
    * - call condition is same with 'ok' event.
+   * - paramter of fid will be after done
    * @see ok
    */
-  done(): void;
+  done(fid: string): void;
+  /**
+   * - form accepts user select form as pagination, this cause pagination event.
+   * - paramter of fid will be after pagination
+   */
+  pagination(fid: string): void;
 };
 
 export default defineComponent<{}, E, D, C, M>({
   data() {
     return { state };
   },
-  emits: ['change', 'ok', 'done'],
+  emits: ['change', 'ok', 'done', 'pagination'],
   computed: {
     fid() {
       const f = state.flow;
@@ -244,6 +252,7 @@ export default defineComponent<{}, E, D, C, M>({
   methods: {
     pagination(next: number) {
       state.flow.current = next;
+      this.$emit('pagination', this.fid);
     },
     ok() {
       const goto = this.goto;
