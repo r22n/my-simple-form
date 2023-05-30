@@ -113,7 +113,7 @@ type D = {
 type C = {
   fid(): string;
   qs(): [model: string, q: QuestionModel][];
-  goto(): string | undefined;
+  goto(): string | undefined | null;
   models(): { [model in string]: MV };
   required(): boolean;
 };
@@ -175,7 +175,7 @@ export default defineComponent<{}, E, D, C, M>({
         .filter(([model, q]) => {
           if (q.style) {
             try {
-              const s: ModelDisplay | undefined = JSON.parse(expreval(q.style.expr, state.model));
+              const s: ModelDisplay | null = JSON.parse(expreval(q.style.expr, state.model));
               if (s) {
                 const v = validate(s, stylevalidate);
                 if (v.errors.length) {
@@ -192,7 +192,6 @@ export default defineComponent<{}, E, D, C, M>({
         .sort((a, b) => Number(a[1].order) > Number(b[1].order) ? 1 : -1);
     },
     goto() {
-
       const f = state.forms[this.fid];
       if (!f) {
         console.warn(`cannot evaluate next fid: forms not found or state not found: state=${!!state} form=${!!f}`);
@@ -257,7 +256,7 @@ export default defineComponent<{}, E, D, C, M>({
     ok() {
       const goto = this.goto;
       if (!goto) {
-        console.error('ignore to ok: unexpected error: goto is empty or undefined');
+        console.error('ignore to ok: unexpected error: goto is empty, undefined or null');
         return;
       } else if (!state.forms[goto]) {
         console.error(`ignore to ok: unexpected error: goto was set but form is not found: fid=${goto}`);

@@ -8,7 +8,7 @@ export type State = {
      *      - user interact with single form and input answer for question called model.
      *      - form have 'fid' and question have 'model' by string.
      *      - form's 'ok'/'done' button navigate user next form 'goto' field.
-     *          - 'done' button goto complete screen if 'goto' is empty or undefined
+     *          - 'done' button goto complete screen if 'goto' is empty or null
      *          - otherwise, 'ok' button goes to 'goto' form as next form
      * - this field reprents formid; 'fid' and forms pairs
      *      - puts your forms into this fields.
@@ -28,7 +28,7 @@ export type State = {
      *      - model['fid']['model'] represents value of field such as text-field user can interact
      * - model field will be set initial value on mounted
      *      - `forms['fid'].questions['model'].value.init` puts inital value
-     *      - if its field was undefined, gives default value instead
+     *          - if its field was undefined, gives default value instead
      *      - default value is '', false, 0 each 'type' field
      *          - 'text|email|select': '' (empty string)
      *          - 'checkbox': false 
@@ -133,7 +133,7 @@ export type Form = {
      *          - conditional form branching and stack history next form to 'pages' as history
      *      - e.g.3. `"next_form"`
      *          - go next_form by 'fid' from this form
-     *      - e.g.4. undefined or empty
+     *      - e.g.4. null or empty
      *          - this form is terminal and displays 'done' button
      */
     goto?: EXF<string>;
@@ -185,14 +185,14 @@ export type QuestionModel = {
      * - 'style' should be JSON string of 'ModelDisplay' type.
      *      - JSON string not match 'ModelDisplay' type shows unspecified
      *      - otherwise, apply style into this question
-     * - default value is 'enabled' if style was undefined.
+     * - default value is 'enabled' if style was null.
      * - expr can use model object 
-     *      - e.g.1. `fid.model < 20 ? '{ "display":"required", "warn": "you cannot use this site: this value should be over 20+"}' : undefined`
-     *      - e.g.2. `you.like_apple  ? '{ "display": "hide" }' : undefined`
+     *      - e.g.1. `fid.model < 20 ? '{ "display":"required", "warn": "you cannot use this site: this value should be over 20+"}' : null`
+     *      - e.g.2. `you.like_apple  ? '{ "display": "hide" }' : null`
      *          - conditional question validation and display 
      *      - e.g.3. `'{ "display": "required" }'`
      *          - always requires user input this text-field even if user answered anything
-     *      - e.g.4. undefined or empty
+     *      - e.g.4. null or undefined
      *          - same with `'{ "display": "enabled" }'`
      * @see ModelDisplay
      */
@@ -243,7 +243,7 @@ export const stylevalidate: Schema = {
 
 export type EXF<T> = {
     expr: parse.Expression;
-    eval?: T;
+    eval?: T | null;
 };
 
 export const init = (): State => ({
