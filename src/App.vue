@@ -103,7 +103,7 @@
 import { defineComponent } from 'vue';
 import { eval as expreval } from 'expression-eval';
 import { validate } from 'jsonschema';
-import { state, State, MV, ModelDisplay, QuestionModel, stylevalidate, fmid } from '.';
+import { state, State, MV, ModelDisplay, QuestionModel, stylevalidate, modelinit } from '.';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -225,36 +225,7 @@ export default defineComponent<{}, E, D, C, M>({
     }
   },
   mounted() {
-    const models = this.models;
-
-    Object.entries(state.forms).forEach(([fid, form]) => {
-      if (!fmid.test(fid)) {
-        state.message.warnings.push(`form behavior will be unspecified: fid rule exceeded: fid=${fid}`);
-      }
-      Object.keys(form.questions).forEach(model => {
-        if (!fmid.test(model)) {
-          state.message.warnings.push(`form behavior will be unspecified: model rule exceeded: model=${fid} fid=${fid}`);
-        }
-      });
-    });
-
-    Object.entries(state.forms).forEach(([fid, form]) => {
-      Object.entries(form.questions).forEach(([model, q]) => {
-        switch (q.value.type) {
-          case 'text':
-          case 'email':
-          case 'select':
-            models[model] = q.value.init !== void 0 ? q.value.init : '';
-            break;
-          case 'check':
-            models[model] = q.value.init !== void 0 ? q.value.init : false;
-            break;
-          case 'number':
-            models[model] = q.value.init !== void 0 ? q.value.init : 0;
-            break;
-        }
-      });
-    });
+    modelinit();
   },
   methods: {
     pagination(next: number) {

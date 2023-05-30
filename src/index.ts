@@ -18,7 +18,8 @@ export {
     EXF,
     init,
     AnswerTouch,
-    fmid
+    fmid,
+    modelinit
 } from './state';
 
 export default App;

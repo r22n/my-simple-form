@@ -256,3 +256,32 @@ export const init = (): State => ({
 export const fmid = /^[^\.\ \;\(\)\[\]\<\>\-\+\*\/\=\@\#\$\%\^\&\*\!\?\{\}\"\'\~]+$/;
 
 export const state = reactive<State>(init());
+
+export const modelinit = () => {
+    Object.entries(state.forms).forEach(([fid, form]) => {
+        if (!fmid.test(fid)) {
+            state.message.warnings.push(`form behavior will be unspecified: fid rule exceeded: fid=${fid}`);
+        }
+
+        state.model[fid] = {};
+        Object.entries(form.questions).forEach(([model, { value }]) => {
+            if (!fmid.test(model)) {
+                state.message.warnings.push(`form behavior will be unspecified: model rule exceeded: model=${fid} fid=${fid}`);
+            }
+
+            switch (value.type) {
+                case 'email':
+                case 'select':
+                case 'text':
+                    state.model[fid][model] = value.init !== void 0 ? value.init : '';
+                    break;
+                case 'check':
+                    state.model[fid][model] = value.init !== void 0 ? value.init : false;
+                    break;
+                case 'number':
+                    state.model[fid][model] = value.init !== void 0 ? value.init : 0;
+                    break;
+            }
+        });
+    })
+};
