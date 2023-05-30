@@ -232,21 +232,23 @@ export default defineComponent<{}, E, D, C, M>({
       });
     });
 
-    for (const [model, q] of this.qs) {
-      switch (q.value.type) {
-        case 'text':
-        case 'email':
-        case 'select':
-          models[model] = q.value.init !== void 0 ? q.value.init : '';
-          break;
-        case 'check':
-          models[model] = q.value.init !== void 0 ? q.value.init : false;
-          break;
-        case 'number':
-          models[model] = q.value.init !== void 0 ? q.value.init : 0;
-          break;
-      }
-    }
+    Object.entries(state.forms).forEach(([fid, form]) => {
+      Object.entries(form.questions).forEach(([model, q]) => {
+        switch (q.value.type) {
+          case 'text':
+          case 'email':
+          case 'select':
+            models[model] = q.value.init !== void 0 ? q.value.init : '';
+            break;
+          case 'check':
+            models[model] = q.value.init !== void 0 ? q.value.init : false;
+            break;
+          case 'number':
+            models[model] = q.value.init !== void 0 ? q.value.init : 0;
+            break;
+        }
+      });
+    });
   },
   methods: {
     pagination(next: number) {
