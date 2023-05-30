@@ -174,21 +174,27 @@ export default defineComponent<{}, E, D, C, M>({
       return Object.entries(qs)
         .filter(([model, q]) => {
           if (q.style) {
+            let s: ModelDisplay | null;
             try {
-              const s: ModelDisplay | null = JSON.parse(expreval(q.style.expr, state.model));
-              if (s) {
-                const v = validate(s, stylevalidate);
-                if (v.errors.length) {
-                  throw v.errors.map(x => `${x.message}: ${x.name} @ ${x.path}`)
-                }
-              }
-              q.style.eval = s;
+              s = JSON.parse(expreval(q.style.expr, state.model));
             } catch (e) {
-              state.message.warnings.push(`ignore to update style: style.expr malfunctions: fid.model=${this.fid}.${model} style=${JSON.stringify(q.style.eval)}: ${e}`);
+              state.message.warnings.push(`ignore style updates: style.expr malfunctions: fid.model=${this.fid}.${model}: broken json: ${e}`)
+              return 1;
             }
+
+            const v = validate(s, stylevalidate);
+            if (!s) {
+              q.style.eval = { display: 'enabled' };
+            } else if (!v.errors.length) {
+              q.style.eval = s;
+            } else {
+              state.message.warnings.push(`ignore style updates: style.expr malfunctions: fid.model=${this.fid}.${model}: json limit exceeded: ${v.errors.map(x => `${x.message} ${x.name} @ ${x.path}`).join(', ')}`);
+            }
+
+            return 1;
           }
-          return 1;
-        })
+        }
+        )
         .sort((a, b) => Number(a[1].order) > Number(b[1].order) ? 1 : -1);
     },
     goto() {
