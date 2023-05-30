@@ -211,13 +211,7 @@ export default defineComponent<{}, E, D, C, M>({
       return f.goto?.eval;
     },
     models() {
-
-      const m = state.model[this.fid];
-      if (!m) {
-        console.warn(`model not found: fid=${this.fid}`);
-        return state.model[this.fid] = {};
-      }
-      return m;
+      return state.model[this.fid];
     },
     required() {
       const qs: [string, QuestionModel][] = this.qs;
@@ -268,8 +262,9 @@ export default defineComponent<{}, E, D, C, M>({
           break;
         }
       }
-
-      f.pages = f.pages.slice(0, c + 1);
+      if (c < f.pages.length - 1) {
+        f.pages = f.pages.slice(0, c + 1);
+      }
     }
   }
 });
