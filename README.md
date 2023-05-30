@@ -145,3 +145,12 @@ type E = {
   pagination(fid:string): void;
 }
 ```
+
+### store initial values 
+
+```
+import { modelinit } from 'my-simple-form';
+
+// state.model will be initial value by state.forms.*.questions.*.value.init
+modelinit();
+```
