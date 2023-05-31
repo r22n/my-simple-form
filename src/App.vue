@@ -190,9 +190,8 @@ export default defineComponent<{}, E, D, C, M>({
             } else {
               state.message.warnings.push(`ignore style updates: style.expr malfunctions: fid.model=${this.fid}.${model}: json limit exceeded: ${v.errors.map(x => `${x.message} ${x.name} @ ${x.path}`).join(', ')}`);
             }
-
-            return 1;
           }
+          return 1;
         }
         )
         .sort((a, b) => Number(a[1].order) > Number(b[1].order) ? 1 : -1);
