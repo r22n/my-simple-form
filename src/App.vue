@@ -103,7 +103,8 @@
 import { defineComponent } from 'vue';
 import { eval as expreval } from 'expression-eval';
 import { validate } from 'jsonschema';
-import { state, State, MV, ModelDisplay, QuestionModel, stylevalidate, modelinit } from '.';
+import { state, State, MV, ModelDisplay, QuestionModel, stylevalidate, modelinit, AnswerModel } from '.';
+import * as datefns from 'date-fns';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -116,6 +117,7 @@ type C = {
   goto(): string | undefined | null;
   models(): { [model in string]: MV };
   required(): boolean;
+  modelutil(): AnswerModel & U;
 };
 type M = {
   pagination(next: number): void;
@@ -153,6 +155,25 @@ type E = {
    */
   pagination(fid: string): void;
 };
+type U = {
+  /**
+   * - expr util helpers in the expr field such as 'goto', 'style' field.
+   * - you can use `_util.date`, `_util.math` like `fid.model` 
+   */
+  _util: {
+    /**
+     * - date-fns you can access by expr of `_util.date.isMatch(fid.model, 'yyyy/MM/dd') ? null : '{"display":"required"}'`
+     * - see. https://date-fns.org/v2.30.0/docs
+     */
+    date: typeof datefns;
+
+    /**
+     * - math helpers for mathematical operation by `_util.math.abs(fid.model) < 2 ? null : '{"display":"required"}'`
+     * - see. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math
+     */
+    math: Math;
+  }
+};
 
 export default defineComponent<{}, E, D, C, M>({
   data() {
@@ -176,7 +197,7 @@ export default defineComponent<{}, E, D, C, M>({
           if (q.style) {
             let s: ModelDisplay | null;
             try {
-              s = JSON.parse(expreval(q.style.expr, state.model));
+              s = JSON.parse(expreval(q.style.expr, this.modelutil));
             } catch (e) {
               state.message.warnings.push(`ignore style updates: style.expr malfunctions: fid.model=${this.fid}.${model}: broken json: ${e}`)
               return 1;
@@ -205,7 +226,7 @@ export default defineComponent<{}, E, D, C, M>({
 
       this.cutpages();
       if (f.goto) {
-        f.goto.eval = expreval(f.goto.expr, state.model);
+        f.goto.eval = expreval(f.goto.expr, this.modelutil);
       }
       return f.goto?.eval;
     },
@@ -215,7 +236,14 @@ export default defineComponent<{}, E, D, C, M>({
     required() {
       const qs: [string, QuestionModel][] = this.qs;
       return qs.some(([model, q]) => q.style?.eval?.display === 'required');
-    }
+    },
+    modelutil() {
+      const u: U = { _util: { date: datefns, math: Math } };
+      return {
+        ...state.model,
+        ...u,
+      } as AnswerModel & U;
+    },
   },
   mounted() {
     modelinit();
@@ -256,7 +284,7 @@ export default defineComponent<{}, E, D, C, M>({
         if (!g) {
           continue;
         }
-        g.eval = expreval(g.expr, state.model);
+        g.eval = expreval(g.expr, this.modelutil);
         if (g.eval && g.eval !== f.pages[c + 1]) {
           break;
         }

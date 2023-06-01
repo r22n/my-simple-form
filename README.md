@@ -35,6 +35,13 @@ state.forms = {
 // 'disabled': gray out this question and show 'warn' message.
 // 'required': red border this field and show 'warn message' and not to gray-out.
 // 'hide': hide this question as user cannot touch.
+
+// you can use special operands;
+// - fid.model;     e.g. f1.q1, form1.question1
+// - _util.date;    e.g. _util.date.isMatch(f1.q1, 'yyyy/MM/dd') 
+//      - see. https://date-fns.org/v2.30.0/docs functions
+// - _util.math:    e.g. _util.math.abs(f1.q1)
+//      - see. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math functions
                 style: { expr: parse(`f1.q1.length ? '{ "display" : "enabled" }' : '{ "display" : "required", "warn" : "question 1 should not to be empty !" }'`) },
             },
             'q2': {

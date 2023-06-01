@@ -1,6 +1,6 @@
 {
   "name": "my-simple-form",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "bootstrap": "^5.2.3",
+    "date-fns": "^2.30.0",
     "expression-eval": "^5.0.0",
     "jsonschema": "^1.4.1",
     "url": "^0.11.0",

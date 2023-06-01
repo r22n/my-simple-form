@@ -74,6 +74,28 @@ state.forms = {
                 placeholder: 'placeholder 1',
                 style: { expr: parse(`f3.q1.length ? '{ "display" : "enabled" }' : '{ "display" : "required", "warn" : "question 1 should not to be empty !" }'`) },
             },
+        },
+        goto: { expr: parse('"f4"') }
+    },
+
+    'f4': {
+        questions: {
+            'q1': {
+                caption: 'question 1',
+                summary: 'summary 1',
+                value: { type: 'text' },
+                order: 0,
+                placeholder: 'yyyy/MM/dd',
+                style: { expr: parse(`_util.date.isMatch(f4.q1, 'yyyy/MM/dd') ? null : '{\"display\": \"required\"}'`) },
+            },
+            'q2': {
+                caption: 'question 1',
+                summary: 'summary 1',
+                value: { type: 'text' },
+                order: 0,
+                placeholder: 'abs < 2',
+                style: { expr: parse(`_util.math.abs(f4.q2) < 2 ? null : '{\"display\": \"required\"}'`) },
+            },
         }
     },
 };
