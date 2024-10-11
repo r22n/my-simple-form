@@ -1,4 +1,4 @@
-import App from './App.vue';
+import App from './components/Top.vue';
 import {
     InlineMessage, EXPR, Form, Forms, Props, Question, Questions,
     InlineMessageSchema, FormSchema, FormsSchema, Input, InputSchema, PropsSchema, QuestionSchema, QuestionsSchema,
