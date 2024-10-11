@@ -1,25 +1,18 @@
-
-
 import App from './App.vue';
+import {
+    InlineMessage, EXPR, Form, Forms, Props, Question, Questions,
+    InlineMessageSchema, FormSchema, FormsSchema, Input, InputSchema, PropsSchema, QuestionSchema, QuestionsSchema,
+    initModel, FormModel
+} from './props';
+
 
 export {
-    state,
-    State,
-    Message,
-    AnswerFlow,
-    AnswerModel,
-    Form,
-    QuestionModel,
-    ModelValue,
-    MT,
-    MV,
-    ModelDisplay,
-    stylevalidate,
-    EXF,
-    init,
-    AnswerTouch,
-    fmid,
-    modelinit
-} from './state';
+    App,
+    initModel
+};
 
-export default App;
+export type {
+    InlineMessage, EXPR, Form, Forms, Props, Question, Questions,
+    InlineMessageSchema, FormSchema, FormsSchema, Input, InputSchema, PropsSchema, QuestionSchema, QuestionsSchema,
+    FormModel
+};

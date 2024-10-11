@@ -1,125 +1,53 @@
 import { createApp } from 'vue'
-import App, { state } from '.'
-import { parse } from 'expression-eval';
+import App from './App.vue'
+import { Props } from './props'
 
-
-state.forms = {
-    'f1': {
-        questions: {
-            'q1': {
-                caption: 'question 1',
-                summary: 'summary 1',
-                value: { type: 'text', init: 'a' },
-                order: 0,
-                placeholder: 'placeholder 1',
-                style: { expr: parse(`f1.q1.length ? '{ "display" : "enabled" }' : '{ "display" : "required", "warn" : "question 1 should not to be empty !" }'`) },
-            },
-            'q2': {
-                caption: 'question 2',
-                summary: 'summary 2',
-                value: { type: 'email', init: 'fuga@piyo' },
-                order: 1,
-                placeholder: 'placeholder 2',
-                style: { expr: parse(`f1.q2.length ? '{ "display" : "enabled" }' : '{ "display" : "disabled", "warn" : "question 2 should not to be empty !" }'`) },
-            },
-            'q3': {
-                caption: 'question 3',
-                summary: 'summary 3',
-                value: { type: 'check', init: true },
-                order: 2,
-                placeholder: 'placeholder 3',
-                style: { expr: parse(`f1.q3 ? '{ "display" : "enabled" }' : '{ "display" : "hide", "warn" : "question 3 should not to be empty !" }'`) },
-            },
-            'q4': {
-                caption: 'question 4',
-                summary: 'summary 4',
-                value: { type: 'number', init: 1 },
-                order: 3,
-                placeholder: 'placeholder 4',
-                style: { expr: parse(`f1.q4 ? '{ "display" : "enabled" }' : '{ "display" : "required", "warn" : "question 4 should not to be empty !" }'`) },
-            },
-            'q5': {
-                caption: 'question 5',
-                summary: 'summary 5',
-                value: { type: 'select', init: '', values: ['a', 'b', 'c'] },
-                order: 4,
-                placeholder: '(placeholder 5)',
-                style: { expr: parse(`f1.q5 ? '{ "display" : "enabled" }' : '{ "display" : "required", "warn" : "question 5 should not to be empty !" }'`) },
-            },
+const props: Props = {
+    start: 'f1',
+    forms: {
+        f1: {
+            goto: 'f1.q1 > 0 ? "f2" : "f3"',
+            questions: {
+                q1: {
+                    caption: 'form1 question1',
+                    description:'description f1.q1',
+                    input:{ 
+                        type: 'number',
+                        default: -1,
+                    },
+                    message: [
+                        { color: 'red', text: 'should be greater than -2', where: 'f1.q1 <= -2' }
+                    ]
+                }
+            }
         },
-        goto: { expr: parse('f1.q3 ? "f2" : "f3"') }
-    },
-
-    'f2': {
-        questions: {
-            'q1': {
-                caption: 'question 1',
-                summary: 'summary 1',
-                value: { type: 'text', init: 'a' },
-                order: 0,
-                placeholder: 'placeholder 1',
-                style: { expr: parse(`f2.q1.length ? '{ "display" : "enabled" }' : '{ "display" : "required", "warn" : "question 1 should not to be empty !" }'`) },
-            },
+        f2:{
+            goto: '"f3"',
+            questions:{
+                q1:{
+                    caption:'form2 question1',
+                    description:'description f2.q1',
+                    input:{
+                        type:'boolean',
+                    }
+                }
+            }
         },
-        goto: { expr: parse('"f3"') }
-    },
-
-    'f3': {
-        questions: {
-            'q1': {
-                caption: 'question 1',
-                summary: 'summary 1',
-                value: { type: 'text', init: 'a' },
-                order: 0,
-                placeholder: 'placeholder 1',
-                style: { expr: parse(`f3.q1.length ? '{ "display" : "enabled" }' : '{ "display" : "required", "warn" : "question 1 should not to be empty !" }'`) },
-            },
-        },
-        goto: { expr: parse('"f4"') }
-    },
-
-    'f4': {
-        questions: {
-            'q1': {
-                caption: 'question 1',
-                summary: 'summary 1',
-                value: { type: 'text' },
-                order: 0,
-                placeholder: 'yyyy/MM/dd',
-                style: { expr: parse(`_util.date.isMatch(f4.q1, 'yyyy/MM/dd') ? null : '{\"display\": \"required\"}'`) },
-            },
-            'q2': {
-                caption: 'question 1',
-                summary: 'summary 1',
-                value: { type: 'text' },
-                order: 0,
-                placeholder: 'abs < 2',
-                style: { expr: parse(`_util.math.abs(f4.q2) < 2 ? null : '{\"display\": \"required\"}'`) },
-            },
+        f3:{
+            questions: {
+                q1:{
+                    caption:'form3 question1',
+                    description:'description f3.q1',
+                    input:{
+                        type:'select',
+                        candidates:[
+                            'a','b','c'
+                        ]
+                    }
+                }
+            }
         }
-    },
-};
-state.flow = {
-    ...state.flow,
-    pages: ['f1'], current: 0,
-};
+    }
+}
 
-state.model = {
-    'f1': {
-        'q1': '',
-        'q2': '',
-        'q3': false,
-        'q4': 0,
-        'q5': 'a',
-    },
-    'f2': {
-        'q1': '',
-    },
-    'f3': {
-        'q1': '',
-    },
-};
-
-
-createApp(App).mount('#app')
-
+createApp(App, props).mount('#app')
