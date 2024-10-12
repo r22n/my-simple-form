@@ -6,14 +6,17 @@
         </p>
         <input class="form-control" type="text" v-model="model[props.fid][props.qid]"
             v-if="props.question.input.type === 'string'">
-        <input class="form-control" type="number" v-model="model[props.fid][props.qid]" :max="props.question.input.max" :min="props.question.input.min" :step="props.question.input.step" 
+        <input class="form-control" type="number" v-model="model[props.fid][props.qid]" :max="props.question.input.max"
+            :min="props.question.input.min" :step="props.question.input.step"
             v-else-if="props.question.input.type === 'number'">
-    <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" v-model="model[props.fid][props.qid]" v-else-if="props.question.input.type === 'boolean'">
-        <select class="form-select" v-model="model[props.fid][props.qid]" v-else-if="props.question.input.type==='select'">
-            <option :value="candidate" v-for="candidate in props.question.input.candidates">{{candidate}}</option>
+        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked"
+            v-model="model[props.fid][props.qid]" v-else-if="props.question.input.type === 'boolean'">
+        <select class="form-select" v-model="model[props.fid][props.qid]"
+            v-else-if="props.question.input.type === 'select'">
+            <option :value="candidate" v-for="candidate in props.question.input.candidates">{{ candidate }}</option>
         </select>
         <p class="text-wrap" :style="`color: ${message.color}`" v-if="!!message">
-            {{ props.question.description }}
+            {{ message.text }}
         </p>
     </div>
 </template>
