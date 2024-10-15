@@ -13,6 +13,10 @@ export {
 
 export type {
     InlineMessage, EXPR, Form, Forms, Props, Question, Questions,
-    InlineMessageSchema, FormSchema, FormsSchema, Input, InputSchema, PropsSchema, QuestionSchema, QuestionsSchema,
+    Input,
     FormModel
+};
+
+export {
+    InlineMessageSchema, FormSchema, FormsSchema, InputSchema, PropsSchema, QuestionSchema, QuestionsSchema,
 };
