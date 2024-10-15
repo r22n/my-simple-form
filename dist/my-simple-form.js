@@ -1235,7 +1235,7 @@ const Vt = { class: "d-flex flex-column" }, Rt = { class: "h3" }, _t = { class: 
   type: "object",
   additionalProperties: !1,
   patternProperties: {
-    "^[^ !@#$%^&*()-+={}[];<>?]+$": Kt
+    "^[^ !@#$%^&*()-+={}\\[\\];<>\\?]+$": Kt
   }
 }, Ht = {
   type: "object",
@@ -1248,7 +1248,7 @@ const Vt = { class: "d-flex flex-column" }, Rt = { class: "h3" }, _t = { class: 
   type: "object",
   additionalProperties: !1,
   patternProperties: {
-    "^[^ !@#$%^&*()-+={}[];<>?]+$": Ht
+    "^[^ !@#$%^&*()-+={}\\[\\];<>\\?]+$": Ht
   }
 }, tr = {
   type: "object",

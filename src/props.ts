@@ -132,7 +132,7 @@ export const QuestionsSchema: Schema = {
     type: 'object',
     additionalProperties: false,
     patternProperties: {
-        '^[^ !@#$%^&*()-+={}[];<>?]+$': QuestionSchema
+        '^[^ !@#$%^&*()-+={}\\[\\];<>\\?]+$': QuestionSchema
     },
 };
 
@@ -149,7 +149,7 @@ export const FormsSchema: Schema = {
     type: 'object',
     additionalProperties: false,
     patternProperties: {
-        '^[^ !@#$%^&*()-+={}[];<>?]+$': FormSchema
+        '^[^ !@#$%^&*()-+={}\\[\\];<>\\?]+$': FormSchema
     },
 };
 
